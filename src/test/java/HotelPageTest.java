@@ -35,7 +35,7 @@ public class HotelPageTest {
             hotelPage = new HotelPage(driver, wait);
 
             hotelPage.open();
-            hotelPage.openFavorites();
+            hotelPage.findHotel("Москва", "2025-06-11", "2025-06-13");
         });
     }
 }

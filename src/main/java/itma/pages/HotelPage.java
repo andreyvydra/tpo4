@@ -6,6 +6,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class HotelPage extends BasePage {
 
+    private static final By cityInput = By.xpath("//input[@data-qa-type=\"inputLocation.value.input\"]");
+    private static final By dropDownItem = By.xpath("//div[@data-qa-type=\"uikit/popover.popoverBlock\"]//div[@data-qa-file=\"DropdownItem\"]");
+    private static final By dateInput = By.xpath("//div[contains(@class, 'DateInputDesktop__inputBox_muoze')]");
+    private static final String dateFrom = "//span[@data-date='%s']";
+    private static final String dateTo = "//span[@data-date='%s']";
+    private static final By searchButton = By.xpath("//span[text()='Искать']");
+    private static final By chooseHotel = By.xpath("//span[@data-qa-file='Clickable']//span[text()='Выбрать']");
+
     public HotelPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
     }
@@ -17,52 +25,52 @@ public class HotelPage extends BasePage {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
     }
 
-    public void openFavorites() {
+    public void findHotel(String city, String from, String to) {
+        selectCity(city);
+        selectData(from, to);
+        clickSearch();
+    }
+
+    private void selectCity(String city) {
         WebElement inputField = wait.until(ExpectedConditions.elementToBeClickable(
-                By.cssSelector("input[data-qa-type='inputLocation.value.input']")
+                cityInput
         ));
         inputField.click();
 
         inputField.clear();
-        inputField.sendKeys("Москва");
+        inputField.sendKeys(city);
 
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                dropDownItem
+        ));
 
         inputField.sendKeys(Keys.TAB);
-        selectData();
-
-        clickSearch();
-
     }
 
-    private void selectData(){
-        WebElement dateInput = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//div[contains(@class, 'DateInputDesktop__inputBox_muoze')]")
+    private void selectData(String from, String to) {
+        WebElement dateElement = wait.until(ExpectedConditions.elementToBeClickable(
+                dateInput
         ));
-        dateInput.click();
+        dateElement.click();
 
         WebElement date11 = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//span[@data-date='2025-06-11']")
+                By.xpath(String.format(dateFrom, from))
         ));
         date11.click();
 
         WebElement date13 = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//span[@data-date='2025-06-13']")
+                By.xpath(String.format(dateTo, to))
         ));
         date13.click();
     }
 
     private void clickSearch(){
-        WebElement searchButton = driver.findElement(By.xpath("//span[text()='Искать']"));
-        searchButton.click();
+        WebElement searchButtonEl = driver.findElement(searchButton);
+        searchButtonEl.click();
 
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[@data-qa-file='Clickable']//span[text()='Выбрать']"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(
+                chooseHotel
+        )).click();
     }
 
 }
