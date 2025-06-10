@@ -1,4 +1,4 @@
-import itma.pages.HotelPage;
+import itma.pages.PlainPage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static itma.utils.WebDriverFactory.getDriver;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class HotelPageTest {
+public class PlainPageTest {
     private static final String[] BROWSERS = {"chrome", "firefox"};
     public List<WebDriver> driverList;
-
     @BeforeEach
     public void setUp() {
         driverList = new ArrayList<>();
@@ -26,18 +26,39 @@ public class HotelPageTest {
     }
 
     @Test
-    public void hotelPageTest() {
+    void shouldOpenPlainPage() {
         driverList.forEach(driver -> {
-            HotelPage hotelPage;
+            PlainPage plainPage;
             WebDriverWait wait;
 
             wait = new WebDriverWait(driver, Duration.ofSeconds(60));
-            hotelPage = new HotelPage(driver, wait);
+            plainPage = new PlainPage(driver, wait);
 
-            hotelPage.open();
-            hotelPage.findHotel("Москва", "2025-06-11", "2025-06-13");
+            plainPage.open();
         });
     }
+
+
+    @Test
+    void shouldSelectTicketsOnPlainPage() {
+        driverList.forEach(driver -> {
+            PlainPage plainPage;
+            WebDriverWait wait;
+
+            wait = new WebDriverWait(driver, Duration.ofSeconds(60));
+            plainPage = new PlainPage(driver, wait);
+
+            plainPage.open();
+            int initTabCount =plainPage.getInitTabCount();
+
+            plainPage.selectTickets("Санкт-Петербург","июль 2025","1", "июль 2025", "5");
+            assertTrue(
+                    plainPage.verifyNewTabOpensWithUrl(initTabCount,
+                            "/travel/flights/", driver.getWindowHandle())
+            );
+        });
+    }
+
 
     @AfterEach
     void teardown() {
@@ -47,4 +68,6 @@ public class HotelPageTest {
             }
         }
     }
+
+
 }

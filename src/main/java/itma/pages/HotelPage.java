@@ -40,7 +40,7 @@ public class HotelPage extends BasePage {
         inputField.clear();
         inputField.sendKeys(city);
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(
+        wait.until(ExpectedConditions.elementToBeClickable(
                 dropDownItem
         ));
 

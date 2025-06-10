@@ -1,11 +1,8 @@
 package itma.pages;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
 
 
 public class HomePage extends BasePage {
@@ -23,10 +20,7 @@ public class HomePage extends BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(itemLocator)).click();
     }
 
-    public boolean isUrlContainsPartPath(String partPath) {
-        System.out.println(driver.getCurrentUrl());
-        return driver.getCurrentUrl().contains(partPath);
-    }
+
 
     public void open() {
         driver.get("https://www.tbank.ru/travel/");
@@ -47,36 +41,9 @@ public class HomePage extends BasePage {
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
     }
 
-    public int getInitTabCount(){
-        return driver.getWindowHandles().size();
-    }
-
-    public boolean verifyNewTabOpensWithUrl(int initialTabCount,String expectedUrlPart, String originalWindow) {
-
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(d -> d.getWindowHandles().size() > initialTabCount);
-
-        for (String windowHandle : driver.getWindowHandles()) {
-            if (!windowHandle.equals(originalWindow)) {
-                driver.switchTo().window(windowHandle);
-                break;
-            }
-        }
-
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.urlContains(expectedUrlPart));
-
-         String currentUrl = driver.getCurrentUrl();
-
-        boolean fl = currentUrl.contains(expectedUrlPart);
-
-        driver.close();
-        driver.switchTo().window(originalWindow);
-
-        return fl;
 
 
-    }
+
 
     
 

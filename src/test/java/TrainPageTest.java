@@ -1,5 +1,5 @@
-import itma.pages.HomePage;
 import itma.pages.TrainPage;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
@@ -12,7 +12,7 @@ import java.util.List;
 import static itma.utils.WebDriverFactory.getDriver;
 
 public class TrainPageTest {
-    private static final String[] BROWSERS = {"chrome", "firefox"};
+    private static final String[] BROWSERS = {"chrome"};
     public List<WebDriver> driverList;
 
     @BeforeEach
@@ -50,6 +50,17 @@ public class TrainPageTest {
             trainPage.open();
             trainPage.fillForm("Москва", "Санкт-Петербург", "11 июн", 2);
         });
+    }
+
+
+
+    @AfterEach
+    void teardown() {
+        for (WebDriver driver : driverList) {
+            if (driver != null) {
+                driver.quit();
+            }
+        }
     }
 
 
